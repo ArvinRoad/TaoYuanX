@@ -57,9 +57,20 @@
                 scene.add(object);
             });
 
+            let texturePlante = THREE.ImageUtils.loadTexture("./resource/西区01.png",null,function(t){});
             FBXModel = new FBXLoader();
             FBXModel.load('./resource/Di.fbx',function (object){
-                scene.add(object);
+                object.traverse( function ( child ) {
+                    var material = new THREE.MeshPhongMaterial({
+                        map: texturePlante
+                    });
+                    child.material = material;
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                    scene.add(object);
             });
             const testBoxGeometry = new THREE.BoxGeometry(4,4,4);
             const textBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
