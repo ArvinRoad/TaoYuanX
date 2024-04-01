@@ -56,30 +56,14 @@
                 });
                 scene.add(object);
             });
+
+            FBXModel = new FBXLoader();
+            FBXModel.load('./resource/Di.fbx',function (object){
+                scene.add(object);
+            });
             const testBoxGeometry = new THREE.BoxGeometry(4,4,4);
             const textBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
             textBox = new THREE.Mesh(testBoxGeometry,textBoxMaterial);
-            textBox.receiveShadow = true;
-            textBox.castShadow = true;
-            scene.add(textBox);
-
-            FBXModel = new FBXLoader();
-            FBXModel.load('./resource/Di.fbx',function (objecct){
-                object.traverse(function (child){
-                    if (child.isMesh){
-                        child.shininess = 5;
-                        //child.textureLoader.load('');
-                        //child.texture.color(0xFF2288);
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                    }
-                });
-                scene.add(object);
-            });
-
-            const xiBoxGeometry = new THREE.BoxGeometry(4,4,4);
-            const xiBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
-            textBox = new THREE.Mesh(xiBoxGeometry,xiBoxMaterial);
             textBox.receiveShadow = true;
             textBox.castShadow = true;
             scene.add(textBox);
@@ -101,8 +85,8 @@
             document.getElementById("WebGL_Output").appendChild(renderer.domElement);
 
             /* 卡迪坐标(后期删除) */
-            Axes = new THREE.AxesHelper(20);
-            scene.add(Axes);
+            //Axes = new THREE.AxesHelper(20);
+            //scene.add(Axes);
 
             /* 三维场景控制器 */
             const controls = new OrbitControls(camera,renderer.domElement);
