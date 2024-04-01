@@ -79,7 +79,7 @@
 
             const xiBoxGeometry = new THREE.BoxGeometry(4,4,4);
             const xiBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
-            textBox = new THREE.Mesh(testBoxGeometry,textBoxMaterial);
+            textBox = new THREE.Mesh(xiBoxGeometry,xiBoxMaterial);
             textBox.receiveShadow = true;
             textBox.castShadow = true;
             scene.add(textBox);
