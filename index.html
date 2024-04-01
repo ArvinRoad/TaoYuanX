@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="Author" content="Arvin"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <title>数字园区Demo</title>
+    <style type="text/css">
+        *{margin: 0;padding: 0;}
+        body{margin: 0;overflow: hidden;}
+    </style>
+    <script type="module">
+        import *as THREE from './libs/build/three.module.js';
+        import { OrbitControls } from './libs/jsm/controls/OrbitControls.js';
+        import { inflate } from './libs/jsm/libs/fflate.module.js';
+        import { FBXLoader } from './libs/jsm/loaders/FBXLoader.js';
+        import { WEBGL } from './libs/jsm/WebGL.js';
+
+        console.log("Three.Js版本号：",THREE.REVISION);
+
+        /* 兼容性 */
+        /*if (WEBGL.isWebGLAvailable()){
+            init();
+        }else {
+            const warning = WEBGL.getWebGLErrorMessage();
+            document.getElementById('WebGL_Output').appendChild(warning);
+        }*/
+
+        /* 全局变量 */
+        let camera,scene,renderer,labelRenderer;
+        let FBXModel,FBXModelMaterial,textBox;
+        let Axes;
+
+        /* 场景 */
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0xA0A0A0,200,2000);
+        camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,2000);
+        camera.position.set(0,500,0);
+        camera.rotation.set(0,40,0);
+        //camera.lookAt(scene.position);
+
+        /* 初始化函数 */
+        function init(){
+            /* FBXModel */
+            FBXModel = new FBXLoader();
+            FBXModel.load('./resource/FBXModel/Demo2.fbx',function (object){
+                object.traverse(function (child){
+                    if (child.isMesh){
+                        child.shininess = 5;
+                        //child.textureLoader.load('');
+                        //child.texture.color(0xFF2288);
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                scene.add(object);
+            });
+            const testBoxGeometry = new THREE.BoxGeometry(4,4,4);
+            const textBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
+            textBox = new THREE.Mesh(testBoxGeometry,textBoxMaterial);
+            textBox.receiveShadow = true;
+            textBox.castShadow = true;
+            scene.add(textBox);
+
+            /* 光照 */
+            const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF,0x080820,);
+            hemisphereLight.position.set(0,200,0);
+            scene.add(hemisphereLight);
+            const AmbientLight = new THREE.AmbientLight(0xAAAAAA);
+            AmbientLight.intensity = 0.3;
+            scene.add(AmbientLight);
+
+            /* 渲染器 */
+            renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setClearColor(new THREE.Color(0xEEEEEE));
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth,window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            document.getElementById("WebGL_Output").appendChild(renderer.domElement);
+
+            /* 卡迪坐标(后期删除) */
+            Axes = new THREE.AxesHelper(20);
+            scene.add(Axes);
+
+            /* 三维场景控制器 */
+            const controls = new OrbitControls(camera,renderer.domElement);
+            controls.addEventListener('change',()=>{
+                renderer.render(scene,camera)
+            })
+            renderer.render(scene,camera);
+        }
+
+        init()
+
+        /* 视角自适应 */
+        window.onreset = function (){
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth,window.innerHeight);
+        }
+
+    </script>
+</head>
+
+<body>
+<div id="WebGL_Output"></div>
+</body>
+
+</html>
