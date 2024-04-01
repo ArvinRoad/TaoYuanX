@@ -44,7 +44,7 @@
         function init(){
             /* FBXModel */
             FBXModel = new FBXLoader();
-            FBXModel.load('./resource/FBXModel/Demo2.fbx',function (object){
+            FBXModel.load('./resource/Xi.fbx',function (object){
                 object.traverse(function (child){
                     if (child.isMesh){
                         child.shininess = 5;
@@ -58,6 +58,27 @@
             });
             const testBoxGeometry = new THREE.BoxGeometry(4,4,4);
             const textBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
+            textBox = new THREE.Mesh(testBoxGeometry,textBoxMaterial);
+            textBox.receiveShadow = true;
+            textBox.castShadow = true;
+            scene.add(textBox);
+
+            FBXModel = new FBXLoader();
+            FBXModel.load('./resource/Di.fbx',function (objecct){
+                object.traverse(function (child){
+                    if (child.isMesh){
+                        child.shininess = 5;
+                        //child.textureLoader.load('');
+                        //child.texture.color(0xFF2288);
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                scene.add(object);
+            });
+
+            const xiBoxGeometry = new THREE.BoxGeometry(4,4,4);
+            const xiBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
             textBox = new THREE.Mesh(testBoxGeometry,textBoxMaterial);
             textBox.receiveShadow = true;
             textBox.castShadow = true;
