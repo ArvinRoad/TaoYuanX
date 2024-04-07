@@ -48,8 +48,9 @@
                 object.traverse(function (child){
                     if (child.isMesh){
                         child.shininess = 5;
-                        //child.textureLoader.load('');
-                        //child.texture.color(0xFF2288);
+                        child.material.color.set(0x609A96);
+                        child.material.transparent = true;
+                        child.material.opacity = 0.8;
                         child.castShadow = true;
                         child.receiveShadow = true;
                     }
@@ -57,12 +58,12 @@
                 scene.add(object);
             });
 
-            let texturePlante = THREE.ImageUtils.loadTexture("./resource/西区01.png",null,function(t){});
+            let imagePlante = THREE.ImageUtils.loadTexture("./resource/西区01.png",null,function(t){});
             FBXModel = new FBXLoader();
             FBXModel.load('./resource/Di.fbx',function (object){
                 object.traverse( function ( child ) {
                     var material = new THREE.MeshPhongMaterial({
-                        map: texturePlante
+                        map: imagePlante
                     });
                     child.material = material;
                     if (child.isMesh) {
@@ -72,6 +73,42 @@
                 });
                     scene.add(object);
             });
+
+            FBXModel = new FBXLoader();
+            FBXModel.load('./resource/XiLi.fbx',function(object){
+                object.traverse(function (child){
+                    if (child.isMesh) {
+                        child.shininess = 5;
+                        child.material.color.set(0xFF2288);
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        child.material.needsUpdate = true;
+                    }
+                });
+                scene.add(object);
+            });
+
+
+            FBXModel = new FBXLoader();
+            FBXModel.load('./resource/XiJK.fbx',function (object){
+                object.traverse(function (child){
+                    const textureLoader = new THREE.TextureLoader();
+                    const texture = textureLoader.load('./resource/0.jpg');
+                    const normalMapLoader = new THREE.TextureLoader();
+                    const normalMap = normalMapLoader.load('./resource/2.jpg');
+                    const metalLoader = new THREE.TextureLoader();
+                    const metalnessMap = metalLoader.load('./resource/1.jpg');
+                    if (child.isMesh) {
+                        child.material.map = texture;
+                        child.material.normalMap = normalMap;
+                        child.material.metalnessMap = metalnessMap;
+                        child.material.metalness = 0.5;
+                        child.material.needsUpdate = true;
+                    }
+                });
+                scene.add(object);
+            });
+
             const testBoxGeometry = new THREE.BoxGeometry(4,4,4);
             const textBoxMaterial = new THREE.MeshLambertMaterial({color: 0xFF2288});
             textBox = new THREE.Mesh(testBoxGeometry,textBoxMaterial);
